@@ -1,38 +1,99 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&family=Roboto+Slab:wght@800&display=swap');
+
+.App{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ width: 100vw;
+ height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.base{
+  margin-top: 15rem;
+  background-color: #0A47A2;
+
+  width: 328px;
+  height: 613px;
+  z-index: 1;
+  border-radius: 8px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.top{
+  height: 25px;
+  width: 328px;
+  background-color: #0A47A2;
+  box-shadow: inset 3px 0px 2px rgb(255,255,255), inset 0px 3px 3px #002178, inset 3px 3px 3px #002178;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.output{
+  height: 67px;
+  margin: 0;
+  background-color: #0A47A2;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  box-shadow: 0px 1px 2px #002178, inset 0px 1px 1px #002178;
+}
+.screen{
+  width: 251px;
+  height: 60px;
+  background-color: #999999;
+  border-radius: 3px;
+  box-shadow: inset 0px 2px 3px #3C485C, 0px 2px 3px #002178;
+  text-align: end;
+  font-size: 2.5rem;
+  font-family: 'Orbitron', sans-serif;
+}
+.blue-textured{
+  background-color: #0A47A2;
+  background-image: linear-gradient(45deg, #8080807e 25%, transparent 25%), linear-gradient(-45deg, #8080807e 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #8080807e 75%), linear-gradient(-45deg, transparent 75%, #8080807e 75%);
+  background-size: 3px 3px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  width: 315px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.title{
+display: flex;
+justify-content: space-between;
+padding: 0px 10px;
+}
+.logo{
+  margin-top: -50px;
+  width: 275px;
+  margin-left: -20px;
+  height: 150px;
+  -webkit-filter: blur(.02rem);
+  -moz-filter: blur(.02rem);
+  -o-filter: blur(.02rem);
+  -ms-filter: blur(.02rem);
+  filter: blur(.02rem);
+}
+
+.solar{
+  padding-bottom: 5px;
+  border-bottom:#002178 solid 2px;
+}
+.solar-panel{
+  margin-top: -50px;
+background: linear-gradient(to left, #886246 24%, #f5bc94 2%, #886246 24%, #f8f6f4 1%, #886246 24%, #a17759 1%,#886246 24%);
+  /* background-color: #886246; */
+  box-shadow: inset 0px 1px 2px black, -1px 0px 1px rgba(255, 255, 255, 0.158);;
+  width: 139px;
+  height: 48px;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+.name{
+  font-family: 'Roboto Slab', serif;
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  font-size: 1.75rem;
+  margin-right: 10px;
+  margin-left: 230px;
+  margin-top: 10px;
+  position: absolute;
 }
