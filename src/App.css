@@ -10,12 +10,16 @@
 
 .base{
   margin-top: 15rem;
+  margin-bottom: 15rem;
   background-color: #0A47A2;
-
+  box-shadow: inset 3px 0px 2px rgba(255, 255, 255, 0.699);
   width: 328px;
-  height: 613px;
+  height: 556px;
   z-index: 1;
-  border-radius: 8px;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .top{
@@ -51,7 +55,7 @@
   background-image: linear-gradient(45deg, #8080807e 25%, transparent 25%), linear-gradient(-45deg, #8080807e 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #8080807e 75%), linear-gradient(-45deg, transparent 75%, #8080807e 75%);
   background-size: 3px 3px;
   background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  width: 315px;
+  width: 320px;
   height: 60px;
   display: flex;
   justify-content: center;
@@ -61,11 +65,12 @@
 display: flex;
 justify-content: space-between;
 padding: 0px 10px;
+width: 308px;
 }
 .logo{
   margin-top: -50px;
   width: 275px;
-  margin-left: -20px;
+  margin-left: -30px;
   height: 150px;
   -webkit-filter: blur(.02rem);
   -moz-filter: blur(.02rem);
@@ -76,7 +81,7 @@ padding: 0px 10px;
 
 .solar{
   padding-bottom: 5px;
-  border-bottom:#002178 solid 2px;
+  border-bottom:#002178 ridge 2px;
 }
 .solar-panel{
   margin-top: -50px;
@@ -86,14 +91,48 @@ background: linear-gradient(to left, #886246 24%, #f5bc94 2%, #886246 24%, #f8f6
   width: 139px;
   height: 48px;
   border-radius: 4px;
-  margin-left: 10px;
+  margin-left: 15px;
 }
 .name{
   font-family: 'Roboto Slab', serif;
   color: white;
   font-size: 1.75rem;
   margin-right: 10px;
-  margin-left: 230px;
+  margin-left: 220px;
   margin-top: 10px;
   position: absolute;
+}
+.input{
+  display: flex; 
+  border: 3px #022fac ridge;
+  border-radius: 8px;
+  margin-top: 15px;
+  width: 90%;
+  height: 320px;
+}
+.num{
+margin-left: 5px;
+}
+.button{
+  border-radius: 4px;
+  width: 55px;
+  height: 40px;
+  box-shadow: 2px 2px 3px black;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  cursor: pointer;
+  display: inline-block;
+  margin: 10px 4px;
+  font-size: .9rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  padding-left: 5px;
+  padding-top: 2px;
+  height: 9%;
+}
+.ops{
+  margin-right: 5px;
+}
+#equals{
+  height: 100px;
 }
