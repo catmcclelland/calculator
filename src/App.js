@@ -1,4 +1,6 @@
 import "./App.css";
+import "./index.css";
+
 import { useState } from "react";
 import { ReactComponent as Logo } from "./logo.svg";
 //tests
@@ -334,7 +336,10 @@ function App() {
                 id={button.id}
                 value={button.value}
                 onClick={() => button.onClick(button.value)}>
-                {button.value}
+                <span className="text" id={`${button.id}-text`}>
+                  {button.value}
+                </span>
+                <div className="bumps" id={`${button.id}-bumps`}></div>
               </div>
             ))}
           </div>
@@ -346,6 +351,7 @@ function App() {
                 id={op.id}
                 onClick={op.onClick}>
                 {op.value}
+                <div className="bumps" id={`${op.id}-bumps`}></div>
               </div>
             ))}
           </div>

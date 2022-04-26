@@ -1,10 +1,10 @@
 @font-face{
     font-family: 'American Typewriter';
     src: local('American Typewriter'),
-    url('./fonts/americantypewriterstd-bold.otf');
+    url('./americantypewriterstd-bold.otf');
 }
 @font-face{
     font-family: 'Quartz';
     src: local('Quartz'),
-    url('./fonts/QuartzRegular.ttf');
+    url('./QuartzRegular.ttf');
 }
