@@ -1,12 +1,14 @@
 import "./App.css";
 import { useState } from "react";
 import { ReactComponent as Logo } from "./logo.svg";
-
+//tests
+//The sequence "5 * - + 5" = should produce an output of "10" : expected '0' to equal '10'
 function App() {
   const [display, setDisplay] = useState(0);
   const [num1, setNum1] = useState();
   const [num2, setNum2] = useState();
   const [operator, setOperator] = useState();
+  //when flag is true, start a new number
   const [flag, setFlag] = useState();
   const [flag2, setFlag2] = useState();
 
@@ -40,6 +42,8 @@ function App() {
         setDisplay(0);
     }
     setNum2();
+    setFlag(true);
+    setOperator();
   };
   const posneg = () => {
     setDisplay(display * -1);
@@ -59,7 +63,10 @@ function App() {
   };
   const appendNum = (num) => {
     const str = new String(display);
-    if (display == 0 && !str.includes(".")) {
+    if (str.includes("-") && str.length === 1) {
+      setDisplay(`-${num}`);
+      setFlag(false);
+    } else if (display == 0 && !str.includes(".")) {
       setDisplay(num);
     } else if (str.includes(".") && flag == true) {
       setDisplay(`${num}`);
@@ -69,6 +76,7 @@ function App() {
     } else if (str.length < 8) {
       setDisplay(`${display}${num}`);
     }
+    setFlag(false);
     setFlag2(true);
   };
   const sqrt = () => {
@@ -78,7 +86,12 @@ function App() {
     setDisplay(display / 100);
   };
   const add = () => {
-    if (num1 && flag2 == true) {
+    if (display === "-") {
+      setDisplay(num1);
+      setOperator("+");
+    } else if (operator && flag === true) {
+      setOperator("+");
+    } else if (num1 && flag2 === true) {
       equals();
       setOperator("+");
       setFlag2(false);
@@ -91,7 +104,10 @@ function App() {
   };
 
   const subtract = () => {
-    if (num1 && flag2 == true) {
+    if (operator && flag === true) {
+      appendNum("-");
+      setFlag(false);
+    } else if (num1 && flag2 === true) {
       equals();
       setOperator("-");
       setFlag2(false);
@@ -104,7 +120,12 @@ function App() {
   };
 
   const divide = () => {
-    if (num1 && flag2 == true) {
+    if (display === "-") {
+      setDisplay(num1);
+      setOperator("/");
+    } else if (operator && flag === true) {
+      setOperator("/");
+    } else if (num1 && flag2 === true) {
       equals();
       setOperator("/");
       setFlag2(false);
@@ -117,7 +138,12 @@ function App() {
   };
 
   const multiply = () => {
-    if (num1 && flag2 == true) {
+    if (display === "-") {
+      setDisplay(num1);
+      setOperator("x");
+    } else if (operator && flag === true) {
+      setOperator("x");
+    } else if (num1 && flag2 === true) {
       equals();
       setOperator("x");
       setFlag2(false);
