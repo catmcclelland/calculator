@@ -13,6 +13,8 @@ function App() {
   //when flag is true, start a new number
   const [flag, setFlag] = useState();
   const [flag2, setFlag2] = useState();
+  const [MR, setMR] = useState(null);
+  const [memoryFlag, setMemoryFlag] = useState(false);
 
   const equals = () => {
     let num3;
@@ -21,7 +23,6 @@ function App() {
     } else {
       num3 = num2;
     }
-    //const num2 = parseFloat(display);
 
     switch (operator) {
       case "+":
@@ -41,38 +42,47 @@ function App() {
         setNum1(parseFloat(num1 * num3));
         break;
       default:
-        setDisplay(0);
+        setDisplay(display);
     }
     setNum2();
     setFlag(true);
     setOperator();
+    setMemoryFlag(false);
   };
+
   const posneg = () => {
     setDisplay(display * -1);
+    setMemoryFlag(false);
   };
+
   const decimal = () => {
-    const str = new String(display);
+    const str = display.toString();
     if (flag) {
       setDisplay(".");
+      setFlag(false);
     } else if (!str.includes(".")) {
       setDisplay(`${display}.`);
     }
+    setMemoryFlag(false);
   };
+
   const clear = () => {
     setDisplay(0);
     setNum2();
     setNum1();
+    setMemoryFlag(false);
   };
+
   const appendNum = (num) => {
-    const str = new String(display);
+    const str = display.toString();
     if (str.includes("-") && str.length === 1) {
       setDisplay(`-${num}`);
       setFlag(false);
-    } else if (display == 0 && !str.includes(".")) {
+    } else if (display === 0 && !str.includes(".")) {
       setDisplay(num);
-    } else if (str.includes(".") && flag == true) {
+    } else if (str.includes(".") && flag === true) {
       setDisplay(`${num}`);
-    } else if (num1 && flag == true) {
+    } else if (num1 && flag === true) {
       setDisplay(num);
       setFlag(false);
     } else if (str.length < 8) {
@@ -80,13 +90,19 @@ function App() {
     }
     setFlag(false);
     setFlag2(true);
+    setMemoryFlag(false);
   };
+
   const sqrt = () => {
     setDisplay(Math.sqrt(display));
+    setMemoryFlag(false);
   };
+
   const percent = () => {
     setDisplay(display / 100);
+    setMemoryFlag(false);
   };
+
   const add = () => {
     if (display === "-") {
       setDisplay(num1);
@@ -101,7 +117,7 @@ function App() {
       setNum1(parseFloat(display));
       setOperator("+");
     }
-
+    setMemoryFlag(false);
     setFlag(true);
   };
 
@@ -117,7 +133,7 @@ function App() {
       setNum1(parseFloat(display));
       setOperator("-");
     }
-
+    setMemoryFlag(false);
     setFlag(true);
   };
 
@@ -135,7 +151,7 @@ function App() {
       setNum1(parseFloat(display));
       setOperator("/");
     }
-
+    setMemoryFlag(false);
     setFlag(true);
   };
 
@@ -153,8 +169,34 @@ function App() {
       setNum1(parseFloat(display));
       setOperator("x");
     }
-
+    setMemoryFlag(false);
     setFlag(true);
+  };
+
+  const mrc = () => {
+    if (memoryFlag === false) {
+      setMemoryFlag(true);
+      setDisplay(MR);
+    } else {
+      setMR();
+      setMemoryFlag(false);
+    }
+  };
+  const mPlus = () => {
+    if (MR === null) {
+      setMR(display);
+    } else {
+      setMR(MR + display);
+    }
+    setMemoryFlag(false);
+  };
+  const mMinus = () => {
+    if (MR === null) {
+      setMR(-display);
+    } else {
+      setMR(MR - display);
+    }
+    setMemoryFlag(false);
   };
 
   const buttons = [
@@ -180,9 +222,27 @@ function App() {
       fontColor: "white",
       onClick: percent,
     },
-    { id: "MRC", value: "MRC", color: "#C21A17", fontColor: "white" },
-    { id: "M-", value: "M-", color: "#C21A17", fontColor: "white" },
-    { id: "M+", value: "M+", color: "#C21A17", fontColor: "white" },
+    {
+      id: "MRC",
+      value: "MRC",
+      color: "#C21A17",
+      fontColor: "white",
+      onClick: mrc,
+    },
+    {
+      id: "M-",
+      value: "M-",
+      color: "#C21A17",
+      fontColor: "white",
+      onClick: mMinus,
+    },
+    {
+      id: "M+",
+      value: "M+",
+      color: "#C21A17",
+      fontColor: "white",
+      onClick: mPlus,
+    },
     {
       id: "seven",
       value: 7,
@@ -258,7 +318,6 @@ function App() {
       value: 0,
       color: "#F0EEED",
       fontColor: "#0A47A2",
-      onClick: clear,
       onClick: appendNum,
     },
     {
