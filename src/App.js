@@ -1,17 +1,16 @@
 import "./App.css";
 import "./index.css";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ReactComponent as Logo } from "./logo.svg";
-//tests
-//The sequence "5 * - + 5" = should produce an output of "10" : expected '0' to equal '10'
+
 function App() {
   const [display, setDisplay] = useState(0);
-  const [num1, setNum1] = useState();
-  const [num2, setNum2] = useState();
-  const [operator, setOperator] = useState();
+  const [num1, setNum1] = useState(null);
+  const [num2, setNum2] = useState(null);
+  const [operator, setOperator] = useState(null);
   //when flag is true, start a new number
-  const [flag, setFlag] = useState();
+  const [flag, setFlag] = useState(true);
   const [flag2, setFlag2] = useState();
   const [MR, setMR] = useState(null);
   const [memoryFlag, setMemoryFlag] = useState(false);
@@ -122,10 +121,10 @@ function App() {
   };
 
   const subtract = () => {
-    if (operator && flag === true) {
+    if (operator && flag) {
       appendNum("-");
       setFlag(false);
-    } else if (num1 && flag2 === true) {
+    } else if (num1 && flag2) {
       equals();
       setOperator("-");
       setFlag2(false);
@@ -366,13 +365,55 @@ function App() {
       onClick: equals,
     },
   ];
+
+  const handleKeyDown = (e) => {
+    const key = e.key;
+    const regex = /[0-9]|\./;
+    console.log(`you clicked ${key}`);
+    if (regex.test(key)) {
+      let button = `buttonRef${key}`;
+      button.current.focus();
+      appendNum(key);
+    }
+    switch (key) {
+      case ".":
+        decimal();
+        break;
+      case "Backspace":
+        clear();
+        break;
+      case "Enter":
+        equals();
+        break;
+      case "*":
+        multiply();
+        break;
+      case "/":
+        divide();
+        break;
+      case "+":
+        add();
+        break;
+      case "-":
+        subtract();
+        break;
+      case "%":
+        percent();
+        break;
+    }
+  };
+
   return (
     <div className="App">
       <div className="base">
         <div className="top"></div>
         <section className="output">
           <div className="blue-textured">
-            <input className="screen" value={display} id="display"></input>
+            <input
+              className="screen"
+              value={display}
+              id="display"
+              onKeyDown={(e) => handleKeyDown(e)}></input>
           </div>
         </section>
         <section className="solar">
@@ -386,7 +427,7 @@ function App() {
         <section className="input">
           <div className="num">
             {buttons.map((button) => (
-              <div
+              <button
                 className="button"
                 style={{
                   backgroundColor: button.color,
@@ -394,24 +435,28 @@ function App() {
                 }}
                 id={button.id}
                 value={button.value}
-                onClick={() => button.onClick(button.value)}>
+                onClick={() => button.onClick(button.value)}
+                // ref={buttonRef0}
+                key={`button-${button.id}`}>
                 <span className="text" id={`${button.id}-text`}>
                   {button.value}
                 </span>
                 <div className="bumps" id={`${button.id}-bumps`}></div>
-              </div>
+              </button>
             ))}
           </div>
           <div className="ops">
             {ops.map((op) => (
-              <div
+              <button
                 className="button"
                 style={{ backgroundColor: op.color, color: op.fontColor }}
                 id={op.id}
-                onClick={op.onClick}>
+                onClick={op.onClick}
+                // ref={buttonRef}
+                key={`op-${op.id}`}>
                 {op.value}
                 <div className="bumps" id={`${op.id}-bumps`}></div>
-              </div>
+              </button>
             ))}
           </div>
         </section>
