@@ -1,7 +1,7 @@
 import "./App.css";
 import "./index.css";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ReactComponent as Logo } from "./logo.svg";
 
 function App() {
@@ -14,6 +14,26 @@ function App() {
   const [flag2, setFlag2] = useState();
   const [MR, setMR] = useState(null);
   const [memoryFlag, setMemoryFlag] = useState(false);
+
+  const buttonsRef = useRef(null);
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      handleKeyDown(e);
+    });
+    return () => {
+      document.removeEventListener("keydown", (e) => {
+        handleKeyDown(e);
+      });
+    };
+  }, [display]);
+
+  function getMap() {
+    if (!buttonsRef.current) {
+      buttonsRef.current = new Map();
+    }
+    return buttonsRef.current;
+  }
 
   const equals = () => {
     let num3;
@@ -367,16 +387,29 @@ function App() {
   ];
 
   const handleKeyDown = (e) => {
+    const map = getMap();
     const key = e.key;
     const regex = /[0-9]|\./;
+    const keydown = (key) => {
+      const node = map.get(key);
+      node.classList.toggle("active");
+      setTimeout(() => {
+        node.classList.toggle("active");
+      }, 150);
+    };
     console.log(`you clicked ${key}`);
     if (regex.test(key)) {
-      let button = `buttonRef${key}`;
-      button.current.focus();
+      const node = map.get(parseInt(key));
+      node.classList.toggle("active");
+
+      setTimeout(() => {
+        node.classList.toggle("active");
+      }, 150);
       appendNum(key);
     }
     switch (key) {
       case ".":
+        keydown(key);
         decimal();
         break;
       case "Backspace":
@@ -409,11 +442,7 @@ function App() {
         <div className="top"></div>
         <section className="output">
           <div className="blue-textured">
-            <input
-              className="screen"
-              value={display}
-              id="display"
-              onKeyDown={(e) => handleKeyDown(e)}></input>
+            <input className="screen" value={display} id="display"></input>
           </div>
         </section>
         <section className="solar">
@@ -437,7 +466,15 @@ function App() {
                 value={button.value}
                 onClick={() => button.onClick(button.value)}
                 // ref={buttonRef0}
-                key={`button-${button.id}`}>
+                key={`button-${button.id}`}
+                ref={(node) => {
+                  const map = getMap();
+                  if (node) {
+                    map.set(button.value, node);
+                  } else {
+                    map.delete(button.value, node);
+                  }
+                }}>
                 <span className="text" id={`${button.id}-text`}>
                   {button.value}
                 </span>
@@ -453,7 +490,15 @@ function App() {
                 id={op.id}
                 onClick={op.onClick}
                 // ref={buttonRef}
-                key={`op-${op.id}`}>
+                key={`op-${op.id}`}
+                ref={(node) => {
+                  const map = getMap();
+                  if (node) {
+                    map.set(op.value, node);
+                  } else {
+                    map.delete(op.value, node);
+                  }
+                }}>
                 {op.value}
                 <div className="bumps" id={`${op.id}-bumps`}></div>
               </button>

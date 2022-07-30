@@ -151,6 +151,10 @@
   transform: translateY(1px);
   box-shadow: 1px 1px 1px black;
 }
+.active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 1px black;
+}
 .text {
   margin-left: 4px;
 }
