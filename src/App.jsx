@@ -1,7 +1,7 @@
 import "./App.css";
 import "./index.css";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { ReactComponent as Logo } from "./logo.svg";
 
 function App() {
@@ -16,17 +16,6 @@ function App() {
   const [memoryFlag, setMemoryFlag] = useState(false);
 
   const buttonsRef = useRef(null);
-
-  useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      handleKeyDown(e);
-    });
-    return () => {
-      document.removeEventListener("keydown", (e) => {
-        handleKeyDown(e);
-      });
-    };
-  }, [display]);
 
   function getMap() {
     if (!buttonsRef.current) {
@@ -93,6 +82,7 @@ function App() {
   };
 
   const appendNum = (num) => {
+    console.log(num);
     const str = display.toString();
     if (str.includes("-") && str.length === 1) {
       setDisplay(`-${num}`);
@@ -389,8 +379,9 @@ function App() {
   const handleKeyDown = (e) => {
     const map = getMap();
     const key = e.key;
-    const regex = /[0-9]|\./;
+    const regex = /[0-9]/;
     const keydown = (key) => {
+      console.log(map);
       const node = map.get(key);
       node.classList.toggle("active");
       setTimeout(() => {
@@ -399,12 +390,7 @@ function App() {
     };
     console.log(`you clicked ${key}`);
     if (regex.test(key)) {
-      const node = map.get(parseInt(key));
-      node.classList.toggle("active");
-
-      setTimeout(() => {
-        node.classList.toggle("active");
-      }, 150);
+      keydown(parseInt(key));
       appendNum(key);
     }
     switch (key) {
@@ -413,28 +399,97 @@ function App() {
         decimal();
         break;
       case "Backspace":
+        keydown(key);
         clear();
         break;
       case "Enter":
+        keydown(key);
         equals();
         break;
       case "*":
+        keydown(key);
         multiply();
         break;
       case "/":
+        keydown(key);
         divide();
         break;
       case "+":
+        keydown(key);
         add();
         break;
       case "-":
+        keydown(key);
         subtract();
         break;
       case "%":
+        keydown(key);
         percent();
         break;
     }
   };
+  const handleKeyDownCallback = useCallback(
+    (e) => {
+      const map = getMap();
+      const key = e.key;
+      const regex = /[0-9]/;
+      const keydown = (key) => {
+        console.log(map);
+        const node = map.get(key);
+        node.classList.toggle("active");
+        setTimeout(() => {
+          node.classList.toggle("active");
+        }, 150);
+      };
+      console.log(`you clicked ${key}`);
+      if (regex.test(key)) {
+        keydown(parseInt(key));
+        appendNum(key);
+      }
+      switch (key) {
+        case ".":
+          keydown(key);
+          decimal();
+          break;
+        case "Backspace":
+          keydown("ON/C");
+          clear();
+          break;
+        case "Enter":
+          keydown("=");
+          equals();
+          break;
+        case "*":
+          keydown("x");
+          multiply();
+          break;
+        case "/":
+          keydown("÷");
+          divide();
+          break;
+        case "+":
+          keydown(key);
+          add();
+          break;
+        case "-":
+          keydown(key);
+          subtract();
+          break;
+        case "%":
+          keydown(key);
+          percent();
+          break;
+      }
+    },
+    [add, appendNum, decimal, divide, equals, multiply, percent, subtract]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDownCallback);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDownCallback);
+    };
+  }, [handleKeyDownCallback]);
 
   return (
     <div className="App">
