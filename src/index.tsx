@@ -4,5 +4,11 @@ import "./index.css";
 import App from "./App";
 import "./fonts/americantypewriterstd-bold.otf";
 import "./fonts/QuartzRegular.ttf";
-const root = ReactDOM.createRoot(document.getElementById("root"));
+
+
+
+const rootElement = document.getElementById('root');
+if(!rootElement) throw new Error('Failed to find the root element');
+const root = ReactDOM.createRoot(rootElement);
+
 root.render(<App />);

@@ -1,72 +1,76 @@
 import "./App.css";
 import "./index.css";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import { ReactComponent as Logo } from "./logo.svg";
+import React, { useState, useRef, useEffect, useCallback, ReactEventHandler } from "react";
+// import { ReactComponent as Logo } from "./logo.svg";
 
-function App() {
-  const [display, setDisplay] = useState(0);
-  const [num1, setNum1] = useState(null);
-  const [num2, setNum2] = useState(null);
-  const [operator, setOperator] = useState(null);
+const logo = require("./logo.svg") as string;
+
+ function App() {
+  const [display, setDisplay] = useState<string>("0");
+  const [num1, setNum1] = useState<string | null>(null);
+  const [num2, setNum2] = useState<string | null>(null);
+  const [operator, setOperator] = useState<string | null>(null);
   //when flag is true, start a new number
-  const [flag, setFlag] = useState(true);
-  const [flag2, setFlag2] = useState();
-  const [MR, setMR] = useState(null);
-  const [memoryFlag, setMemoryFlag] = useState(false);
+  const [flag, setFlag] = useState<boolean>(true);
+  const [flag2, setFlag2] = useState<boolean>();
+  const [MR, setMR] = useState<number|null>(null);
+  const [memoryFlag, setMemoryFlag] = useState<boolean>(false);
 
-  const buttonsRef = useRef(null);
+  const buttonsRef: React.RefObject<HTMLButtonElement | null>  | null= useRef(null);
 
-  function getMap() {
-    if (!buttonsRef.current) {
-      buttonsRef.current = new Map();
-    }
-    return buttonsRef.current;
-  }
+  
 
   const equals = () => {
-    let num3;
+    let num3: number;
     if (!num2) {
       num3 = parseFloat(display);
     } else {
-      num3 = num2;
+      num3 = parseFloat(num2);
     }
-
-    switch (operator) {
+if(num1 && num3) {
+  let num: number = parseFloat(num1);
+  let ans;
+  switch (operator) {
       case "+":
-        setDisplay(parseFloat(num1 + num3));
-        setNum1(parseFloat(num1 + num3));
+        ans = num + num3;
+        setDisplay(ans.toString());
+        setNum1(ans.toString());
         break;
       case "-":
-        setDisplay(parseFloat(num1 - num3));
-        setNum1(parseFloat(num1 - num3));
+        ans = num - num3
+        setDisplay(ans.toString());
+        setNum1(ans.toString());
         break;
       case "/":
-        setDisplay(parseFloat(num1 / num3));
-        setNum1(parseFloat(num1 / num3));
+        ans = num/num3;
+        setDisplay(ans.toString());
+        setNum1(ans.toString());
         break;
       case "x":
-        setDisplay(parseFloat(num1 * num3));
-        setNum1(parseFloat(num1 * num3));
+        ans = num*num3;
+        setDisplay(ans.toString());
+        setNum1(ans.toString());
         break;
       default:
         setDisplay(display);
-    }
-    setNum2();
+    }}
+    setNum2(null);
     setFlag(true);
-    setOperator();
+    setOperator(null);
     setMemoryFlag(false);
   };
 
   const posneg = () => {
-    setDisplay(display * -1);
+    let ans = parseFloat(display) * -1
+    setDisplay(ans.toString());
     setMemoryFlag(false);
   };
 
   const decimal = () => {
     const str = display.toString();
     if (flag) {
-      setDisplay(".");
+      setDisplay("."); //does this need to be a string decimal ? !!!!!!!
       setFlag(false);
     } else if (!str.includes(".")) {
       setDisplay(`${display}.`);
@@ -75,24 +79,24 @@ function App() {
   };
 
   const clear = () => {
-    setDisplay(0);
-    setNum2();
-    setNum1();
+    setDisplay("0");
+    setNum2(null);
+    setNum1(null);
     setMemoryFlag(false);
   };
 
-  const appendNum = (num) => {
+  const appendNum = (num: number | string) => {
     console.log(num);
     const str = display.toString();
     if (str.includes("-") && str.length === 1) {
       setDisplay(`-${num}`);
       setFlag(false);
-    } else if (display === 0 && !str.includes(".")) {
-      setDisplay(num);
+    } else if (display === "0" && !str.includes(".")) {
+      setDisplay(num.toString());
     } else if (str.includes(".") && flag === true) {
       setDisplay(`${num}`);
     } else if (num1 && flag === true) {
-      setDisplay(num);
+      setDisplay(num.toString());
       setFlag(false);
     } else if (str.length < 8) {
       setDisplay(`${display}${num}`);
@@ -103,17 +107,22 @@ function App() {
   };
 
   const sqrt = () => {
-    setDisplay(Math.sqrt(display));
+    if(typeof display === "string") {
+      setDisplay(Math.sqrt(parseFloat(display)).toString())
+    } else if (typeof display === "number") {
+      setDisplay(Math.sqrt(display).toString());
+    }
     setMemoryFlag(false);
   };
 
   const percent = () => {
-    setDisplay(display / 100);
+    let ans = parseFloat(display) / 100
+    setDisplay(ans.toString());
     setMemoryFlag(false);
   };
 
   const add = () => {
-    if (display === "-") {
+    if (display === "-" && num1) {
       setDisplay(num1);
       setOperator("+");
     } else if (operator && flag === true) {
@@ -123,7 +132,7 @@ function App() {
       setOperator("+");
       setFlag2(false);
     } else {
-      setNum1(parseFloat(display));
+      setNum1(display);
       setOperator("+");
     }
     setMemoryFlag(false);
@@ -132,14 +141,14 @@ function App() {
 
   const subtract = () => {
     if (operator && flag) {
-      appendNum("-");
-      setFlag(false);
+      posneg(); //changed this...used to be appendNum("-")
+      setFlag(false); //? check...
     } else if (num1 && flag2) {
       equals();
       setOperator("-");
       setFlag2(false);
-    } else {
-      setNum1(parseFloat(display));
+    } else{
+      setNum1(display);
       setOperator("-");
     }
     setMemoryFlag(false);
@@ -147,7 +156,7 @@ function App() {
   };
 
   const divide = () => {
-    if (display === "-") {
+    if (display === "-" && num1) {
       setDisplay(num1);
       setOperator("/");
     } else if (operator && flag === true) {
@@ -157,7 +166,7 @@ function App() {
       setOperator("/");
       setFlag2(false);
     } else {
-      setNum1(parseFloat(display));
+      setNum1(display);
       setOperator("/");
     }
     setMemoryFlag(false);
@@ -165,7 +174,7 @@ function App() {
   };
 
   const multiply = () => {
-    if (display === "-") {
+    if (display === "-" && num1) {
       setDisplay(num1);
       setOperator("x");
     } else if (operator && flag === true) {
@@ -175,7 +184,7 @@ function App() {
       setOperator("x");
       setFlag2(false);
     } else {
-      setNum1(parseFloat(display));
+      setNum1(display);
       setOperator("x");
     }
     setMemoryFlag(false);
@@ -183,19 +192,19 @@ function App() {
   };
 
   const mrc = () => {
-    if (memoryFlag === false) {
+    if (memoryFlag === false && MR) {
       setMemoryFlag(true);
-      setDisplay(MR);
+      setDisplay(MR.toString());
     } else {
-      setMR();
+      setMR(null);
       setMemoryFlag(false);
     }
   };
   const mPlus = () => {
     if (MR === null) {
-      setMR(display);
-    } else {
-      setMR(MR + display);
+      setMR(parseFloat(display));
+    } else if(MR && display){
+      setMR(MR + parseFloat(display));
     }
     setMemoryFlag(false);
   };
@@ -203,7 +212,7 @@ function App() {
     if (MR === null) {
       setMR(-display);
     } else {
-      setMR(MR - display);
+      setMR(MR - parseFloat(display));
     }
     setMemoryFlag(false);
   };
@@ -376,66 +385,72 @@ function App() {
     },
   ];
 
-  const handleKeyDown = (e) => {
-    const map = getMap();
-    const key = e.key;
-    const regex = /[0-9]/;
-    const keydown = (key) => {
-      console.log(map);
-      const node = map.get(key);
-      node.classList.toggle("active");
-      setTimeout(() => {
-        node.classList.toggle("active");
-      }, 150);
-    };
-    console.log(`you clicked ${key}`);
-    if (regex.test(key)) {
-      keydown(parseInt(key));
-      appendNum(key);
+  function getMap() {
+    if (!buttonsRef?.current) {
+      buttonsRef.current = new Map();
     }
-    switch (key) {
-      case ".":
-        keydown(key);
-        decimal();
-        break;
-      case "Backspace":
-        keydown(key);
-        clear();
-        break;
-      case "Enter":
-        keydown(key);
-        equals();
-        break;
-      case "*":
-        keydown(key);
-        multiply();
-        break;
-      case "/":
-        keydown(key);
-        divide();
-        break;
-      case "+":
-        keydown(key);
-        add();
-        break;
-      case "-":
-        keydown(key);
-        subtract();
-        break;
-      case "%":
-        keydown(key);
-        percent();
-        break;
-    }
-  };
+    return buttonsRef.current;
+  }
+  // const handleKeyDown = (e) => {
+  //   const map = getMap();
+  //   const key = e.key;
+  //   const regex = /[0-9]/;
+  //   const keydown = (key: React.KeyboardEvent<HTMLInputElement>) => {
+  //     console.log(map);
+  //     const node = map?.get(key);
+  //     node.classList.toggle("active");
+  //     setTimeout(() => {
+  //       node.classList.toggle("active");
+  //     }, 150);
+  //   };
+  //   console.log(`you clicked ${key}`);
+  //   if (regex.test(key)) {
+  //     keydown(key);
+  //     appendNum(key);
+  //   }
+  //   switch (key) {
+  //     case ".":
+  //       keydown(key);
+  //       decimal();
+  //       break;
+  //     case "Backspace":
+  //       keydown(key);
+  //       clear();
+  //       break;
+  //     case "Enter":
+  //       keydown(key);
+  //       equals();
+  //       break;
+  //     case "*":
+  //       keydown(key);
+  //       multiply();
+  //       break;
+  //     case "/":
+  //       keydown(key);
+  //       divide();
+  //       break;
+  //     case "+":
+  //       keydown(key);
+  //       add();
+  //       break;
+  //     case "-":
+  //       keydown(key);
+  //       subtract();
+  //       break;
+  //     case "%":
+  //       keydown(key);
+  //       percent();
+  //       break;
+  //   }
+  // };
   const handleKeyDownCallback = useCallback(
-    (e) => {
+    (e: React.KeyboardEvent<HTMLButtonElement>) => {
       const map = getMap();
       const key = e.key;
       const regex = /[0-9]/;
-      const keydown = (key) => {
+      const keydown = (key: string) => {
         console.log(map);
-        const node = map.get(key);
+        const node = map?.get(key);
         node.classList.toggle("active");
         setTimeout(() => {
           node.classList.toggle("active");
@@ -443,8 +458,8 @@ function App() {
       };
       console.log(`you clicked ${key}`);
       if (regex.test(key)) {
-        keydown(parseInt(key));
-        appendNum(key);
+        keydown(key);
+        appendNum(parseFloat(key));
       }
       switch (key) {
         case ".":
@@ -525,9 +540,9 @@ function App() {
                 ref={(node) => {
                   const map = getMap();
                   if (node) {
-                    map.set(button.value, node);
+                    map?.set(button.value, node);
                   } else {
-                    map.delete(button.value, node);
+                    map?.delete(button.value, node);
                   }
                 }}>
                 <span className="text" id={`${button.id}-text`}>
@@ -549,9 +564,9 @@ function App() {
                 ref={(node) => {
                   const map = getMap();
                   if (node) {
-                    map.set(op.value, node);
+                    map?.set(op.value, node);
                   } else {
-                    map.delete(op.value, node);
+                    map?.delete(op.value, node);
                   }
                 }}>
                 {op.value}
